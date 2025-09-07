@@ -1,3 +1,5 @@
+import org.gradle.testing.jacoco.tasks.JacocoReport
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -8,6 +10,7 @@ plugins {
 }
 
 apply(plugin = "dagger.hilt.android.plugin")
+apply(plugin = "jacoco")
 
 android {
     namespace = "com.juileebhombe.newsapp"
@@ -97,4 +100,52 @@ dependencies {
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+// JaCoCo Configuration
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.named("testDebugUnitTest"))
+
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco"))
+        xml.required.set(true)
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/jacocoTestReport.xml"))
+        csv.required.set(false)
+    }
+
+    val coverageSourceDirs = listOf(
+        "src/main/java",
+        "src/main/kotlin"
+    )
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/Hilt_*.*",
+        "**/*_Factory.*",
+        "**/*_MembersInjector.*",
+        "**/*_Provide*.*",
+        "**/*_Factory.class",
+        "**/*_MembersInjector.class",
+        "**/*_Provide.class"
+    )
+
+    classDirectories.setFrom(
+        fileTree("${project.layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+            exclude(fileFilter)
+        }
+    )
+
+    sourceDirectories.setFrom(files(coverageSourceDirs))
+
+    executionData.setFrom(
+        fileTree(project.layout.buildDirectory.get()) {
+            include("jacoco/**/*.exec")
+        }
+    )
 }

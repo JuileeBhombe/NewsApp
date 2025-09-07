@@ -2,6 +2,8 @@
 
 A Kotlin Android app that fetches and displays news articles from NewsAPI.org.
 
+[![Test Coverage](https://img.shields.io/badge/coverage-28%25-blue.svg)](app/build/reports/jacoco/index.html)
+
 ## 🎯 Assignment Requirements
 
 ### Core Features
@@ -59,8 +61,32 @@ app/src/main/java/com/juileebhombe/newsapp/
 
 ## 🧪 Testing
 
-- **Unit Tests**: ViewModel, Repository, Use cases
-- **Test Coverage**: Core business logic
+### Running Tests
+
+**Unit Tests:**
+```bash
+./gradlew testDebugUnitTest
+```
+
+**Instrumentation Tests:**
+```bash
+./gradlew connectedDebugAndroidTest
+```
+
+**All Tests:**
+```bash
+./gradlew test
+```
+
+### Code Coverage
+
+**Generate & View:**
+```bash
+./gradlew jacocoTestReport
+open app/build/reports/jacoco/index.html
+```
+
+Reports include line/branch coverage with interactive HTML visualization.
 
 ## 📋 Requirements Met
 
